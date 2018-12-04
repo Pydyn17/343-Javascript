@@ -9,7 +9,10 @@ const fs = require('fs');
 // and can be accessed as if it was any other javascript
 // object
 const database = require('./programmers.json');
-
+// keys of the objects in database
+const keys = Object.keys(database);
+// database as an array
+const dba = [database]
 // Make an instance of our express application
 const app = express();
 // Specify our > 1024 port to run on
@@ -26,23 +29,57 @@ if (!fs.existsSync('./programmers.json')) {
 // Build our routes
 
 app.get('/', (req, res) => {
-  res.send('Fill me in to return ALL programmers!');
+  res.send(dba);
+});
+
+app.get('/keys', (req,res) => {
+  res.send(keys)
 });
 
 app.get('/:id', (req, res) => {
   const id = req.params.id;
+  var slaves = [];
+  dba.forEach(s => {
+    if(s.SID == id){
+      slaves.push(s);
+    }
+  });
 
-  res.send(`Fill me in to return values with ID: ${id}`);
+  if(slaves.length == 0){
+    res.sendStatus(404);
+  }else{
+    res.send(slaves);
+  }
+
+  //res.send(`Fill me in to return values with ID: ${id}`);
 });
 
-app.put('/:id', (req, res) => {
+app.put('/update', (req, res) => {
   const id = req.params.id;
 
-  res.send(`Fill me in to update values with ID: ${id}`);
+  res.send(`Update values with ID: ${id}`);
 });
 
-app.post('/', (req, res) => {
+app.post('/new', (req, res) => {
+
+  // terminal command to add to data to json via a POST request:
+  // curl --header "Content-Type: application/json" --request POST \
+  // --data '{"firstName":"Mathew", "lastName":"Charath", "homeAddress":"home", "SID":"001","goodSlave": "true"}' \
+  // http://localhost:3000/new
+
   const body = req.body; // Hold your JSON in here!
+  const bKey = Object.keys(body);
+
+  let data = {};
+  keys.forEach(k => {
+    if (body[k]) {
+      data[k] = body[k];
+    }
+    else {
+      data[k] = "";
+    }
+  });
+  dba.push(data);
 
   res.send(`You sent: ${body}`);
 });
