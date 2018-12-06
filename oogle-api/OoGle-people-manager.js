@@ -57,6 +57,22 @@ app.get('/:id', (req, res) => {
 app.put('/update', (req, res) => {
   const id = req.params.id;
 
+  const body = req.body; // Hold your JSON in here!
+  const bKey = Object.keys(body);
+
+  dba.forEach(s => {
+    if(s.SID == id){
+      keys.forEach(k => {
+        if (body[k]) {
+          s[k] = body[k];
+        }
+        else {
+          s[k] = "";
+        }
+       });
+    }
+   });
+
   res.send(`Update values with ID: ${id}`);
 });
 
