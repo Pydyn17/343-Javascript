@@ -54,7 +54,7 @@ app.get('/:id', (req, res) => {
   //res.send(`Fill me in to return values with ID: ${id}`);
 });
 
-app.put('/update', (req, res) => {
+app.put('/:id, (req, res) => {
   const id = req.params.id;
 
   const body = req.body; // Hold your JSON in here!
