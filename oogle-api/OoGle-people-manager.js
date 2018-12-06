@@ -46,7 +46,7 @@ app.get('/:id', (req, res) => {
   });
 
   if(slaves.length == 0){
-    res.sendStatus(404);
+    res.send(`Error`);
   }else{
     res.send(slaves);
   }
@@ -85,6 +85,11 @@ app.post('/new', (req, res) => {
 });
 
 // IMPLEMENT A ROUTE TO HANDLE ALL OTHER ROUTES AND RETURN AN ERROR MESSAGE
+
+app.all('/*', (req,res) => {
+  res.send(`Error`);
+});
+
 
 app.listen(port, () => {
   console.log(`She's alive on port ${port}`);
