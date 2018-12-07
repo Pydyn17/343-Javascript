@@ -1,20 +1,34 @@
+/************************************************************************
+* A RESTful API in JavaScript using the express toolkit
+*
+* @author Mathew Charath and Nick Pydyn
+* @date December 7, 2018
+************************************************************************/
+
 // The API toolkit for making REST systems easily
 const express = require('express');
+
 // A good solution for handling JSON data in routes
 const bodyParser = require('body-parser');
+
 // Node JS modules for filesystem access
 const fs = require('fs');
+
 // Our database connection
 // This will be a JSON object of our programmers
 // and can be accessed as if it was any other javascript
 // object
 const database = require('./programmers.json');
+
 // keys of the objects in database
 const keys = Object.keys(database);
+
 // database as an array
 const dba = [database]
+
 // Make an instance of our express application
 const app = express();
+
 // Specify our > 1024 port to run on
 const port = 3000;
 
@@ -28,14 +42,25 @@ if (!fs.existsSync('./programmers.json')) {
 
 // Build our routes
 
+/**************************************************************************
+* Route for a GET request that sends back all the data in the JSON
+**************************************************************************/
 app.get('/', (req, res) => {
   res.send(dba);
 });
 
+
+/**************************************************************************
+* Route for a GET request that sends back the keys of the objects
+* in the database
+**************************************************************************/
 app.get('/keys', (req,res) => {
   res.send(keys)
 });
 
+/*************************************************************************
+* Route for a GET request that sends back the object for the given ID
+*************************************************************************/
 app.get('/:id', (req, res) => {
   const id = req.params.id;
   var slaves = [];
@@ -54,7 +79,10 @@ app.get('/:id', (req, res) => {
   //res.send(`Fill me in to return values with ID: ${id}`);
 });
 
-app.put('/update', (req, res) => {
+/************************************************************************
+* Route for a PUT request to change the object with the given ID
+************************************************************************/
+app.put('/:id', (req, res) => {
   const id = req.params.id;
 
   const body = req.body; // Hold your JSON in here!
@@ -70,17 +98,21 @@ app.put('/update', (req, res) => {
           s[k] = "";
         }
        });
-    }
+     }
    });
 
   res.send(`Update values with ID: ${id}`);
 });
 
+/***********************************************************************
+* Route for a POST request to add the given data as a new object to
+* the database
+***********************************************************************/
 app.post('/new', (req, res) => {
 
   // terminal command to add to data to json via a POST request:
   // curl --header "Content-Type: application/json" --request POST \
-  // --data '{"firstName":"Mathew", "lastName":"Charath", "homeAddress":"home", "SID":"001","goodSlave": "true"}' \
+  // --data '{"firstName":"Name", "lastName":"surname", "SID":"001","goodSlave": "true"}' \
   // http://localhost:3000/new
 
   const body = req.body; // Hold your JSON in here!
@@ -102,6 +134,9 @@ app.post('/new', (req, res) => {
 
 // IMPLEMENT A ROUTE TO HANDLE ALL OTHER ROUTES AND RETURN AN ERROR MESSAGE
 
+/**************************************************************************
+* A route to to handle all other request that sends `Error`
+**************************************************************************/
 app.all('/*', (req,res) => {
   res.send(`Error`);
 });
